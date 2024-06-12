@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pn.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.pn.entity.User">
+        <id column="id" property="id" />
+        <result column="username" property="username" />
+        <result column="age" property="age" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="avatar" property="avatar" />
+        <result column="level" property="level" />
+        <result column="home_link" property="homeLink" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, username, age, email, phone, avatar, level, home_link, create_time, update_time
+    </sql>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM user
+        WHERE id = #{id}
+    </select>
+
+    <!-- 插入操作 -->
+    <insert id="insert" parameterType="com.pn.entity.User">
+        INSERT INTO ${tableName}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="username != null">username,</if>
+            <if test="age != null">age,</if>
+            <if test="email != null">email,</if>
+            <if test="phone != null">phone,</if>
+            <if test="avatar != null">avatar,</if>
+            <if test="level != null">level,</if>
+            <if test="homeLink != null">home_link,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+        </trim>
+        <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="username != null">#{username},</if>
+            <if test="age != null">#{age},</if>
+            <if test="email != null">#{email},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="avatar != null">#{avatar},</if>
+            <if test="level != null">#{level},</if>
+            <if test="homeLink != null">#{homeLink},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+        </trim>
+    </insert>
+
+    <!-- 更新操作 -->
+    <update id="updateById" parameterType="com.pn.entity.User">
+        UPDATE ${tableName}
+        <set>
+            <if test="username != null">username = #{username},</if>
+            <if test="age != null">age = #{age},</if>
+            <if test="email != null">email = #{email},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="avatar != null">avatar = #{avatar},</if>
+            <if test="level != null">level = #{level},</if>
+            <if test="homeLink != null">home_link = #{homeLink},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除操作 -->
+    <delete id="deleteById" parameterType="java.lang.Long">
+        DELETE FROM ${tableName}
+        WHERE id = #{id}
+    </delete>
+
+    <!-- 分页查询 -->
+    <select id="selectPage" resultMap="BaseResultMap" parameterType="map">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM ${tableName}
+        <if test="username != null">
+            WHERE username = #{username}
+        </if>
+        ORDER BY id
+        LIMIT #{pageNum}, #{pageSize}
+    </select>
+
+</mapper>

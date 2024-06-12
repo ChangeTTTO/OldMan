@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pn.mapper.CommentLikeMapper">
+    <delete id="deleteBatchByCid" >
+        -- choose标签是按顺序判断其内部when标签中的test条件出否成立，如果有一个成立，则 choose 结束。
+        -- 当 choose 中所有 when 的条件都不满则时，则执行 otherwise 中的sql。
+        <choose>
+            <when test="list != null and list.size > 0">
+                DELETE FROM comment_like
+                WHERE comment_id IN
+                <foreach collection="list" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </when>
+            <otherwise>
+                SELECT 0
+            </otherwise>
+        </choose>
+    </delete>
+</mapper>

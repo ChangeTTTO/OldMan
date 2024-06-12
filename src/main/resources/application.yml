@@ -1,0 +1,6 @@
+server:
+  port: 7031
+
+spring:
+  profiles:
+    active: dev
