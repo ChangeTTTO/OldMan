@@ -2,17 +2,20 @@ package com.pn.controller;
 
 
 import cn.undraw.util.result.R;
-import com.pn.dto.CommentDTO;
-import com.pn.dto.LikedDTO;
+import com.pn.entity.IpLocationResponse;
+import com.pn.entity.dto.CommentDTO;
+import com.pn.entity.dto.LikedDTO;
 import com.pn.entity.Comment;
 import com.pn.service.CommentLikeService;
 import com.pn.service.CommentService;
+import com.pn.util.IpUtils;
 import com.pn.util.PageInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -33,6 +36,7 @@ public class CommentController {
     @Resource
     private CommentLikeService commentLikeService;
 
+
     @ApiOperation("分页查询评论列表")
     @GetMapping("/page/{pageNum}/{pageSize}")
     public R<List<Comment>> page(@PathVariable int pageNum, @PathVariable int pageSize, Integer articleId) {
@@ -47,8 +51,16 @@ public class CommentController {
 
     @ApiOperation("添加评论")
     @PostMapping("/save")
-    public R<?> save(@RequestBody CommentDTO commentDTO) {
-        return R.ok(commentService._save(commentDTO));
+    public R<?> save(HttpServletRequest request, @RequestBody CommentDTO commentDTO) {
+        // 获取客户端IP地址
+        String ip = IpUtils.getClientIpAddress(request);
+        System.out.println("IP地址是:"+ip);
+        // 获取城市信息
+        IpLocationResponse bean = IpUtils.getCity(ip);
+        String province = bean.getProvince();
+        System.out.println("城市是:"+province);
+        // 保存评论
+        return R.ok(commentService._save(commentDTO,province));
     }
 
     @ApiOperation("删除评论")

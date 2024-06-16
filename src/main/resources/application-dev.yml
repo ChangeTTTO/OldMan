@@ -53,3 +53,5 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   # 实体类别名,无需添加完整包路径
   type-aliases-package: com.pn.entity
+
+

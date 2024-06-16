@@ -1,6 +1,6 @@
 package com.pn.util;
 
-import com.pn.dto.LikedDTO;
+import com.pn.entity.dto.LikedDTO;
 import com.pn.util.redis.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

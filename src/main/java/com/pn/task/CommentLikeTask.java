@@ -17,7 +17,7 @@ public class CommentLikeTask {
      */
     @Scheduled(cron = "0 0 0 * * *")
     public void task2() {
-        // redis同步点赞数量和状态到mysql
+        // 将点赞数持久化到MySQL中，然后再删除所有redis缓存
         commentLikeService.syncLike();
     }
 }

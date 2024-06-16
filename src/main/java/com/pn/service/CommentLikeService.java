@@ -1,6 +1,6 @@
 package com.pn.service;
 
-import com.pn.dto.LikedDTO;
+import com.pn.entity.dto.LikedDTO;
 import com.pn.entity.CommentLike;
 import com.baomidou.mybatisplus.extension.service.IService;
 

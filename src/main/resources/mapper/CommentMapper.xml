@@ -25,6 +25,7 @@
         <if test="#{articleId} != null">
             AND article_id = #{articleId}
         </if>
+        order by c.create_time desc
     </select>
 
     <select id="selectByPid" resultMap="commentMap">

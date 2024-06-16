@@ -23,17 +23,26 @@
         id, username, age, email, phone, avatar, level, home_link, create_time, update_time
     </sql>
 
+    <insert id="register">
+        insert into user (email,password,username,avatar)
+        values (#{email},#{password}, CONCAT('用户', FLOOR(1000 + (RAND() * 9000))),'https://rxbby.oss-cn-guangzhou.aliyuncs.com/v2-811b30409fa05d417f72ceeff2eac3f8_1440w.webp')
+    </insert>
+
+    <select id="getUserByEmail" resultType="com.pn.entity.User" parameterType="java.lang.String">
+        select * from user where email = #{email}
+    </select>
+
     <!-- 根据ID查询 -->
-    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    <select id="getUserById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
         SELECT
-        <include refid="Base_Column_List" />
+        *
         FROM user
         WHERE id = #{id}
     </select>
 
     <!-- 插入操作 -->
     <insert id="insert" parameterType="com.pn.entity.User">
-        INSERT INTO ${tableName}
+        INSERT INTO user
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="id != null">id,</if>
             <if test="username != null">username,</if>
@@ -62,7 +71,7 @@
 
     <!-- 更新操作 -->
     <update id="updateById" parameterType="com.pn.entity.User">
-        UPDATE ${tableName}
+        UPDATE user
         <set>
             <if test="username != null">username = #{username},</if>
             <if test="age != null">age = #{age},</if>
@@ -79,7 +88,7 @@
 
     <!-- 删除操作 -->
     <delete id="deleteById" parameterType="java.lang.Long">
-        DELETE FROM ${tableName}
+        DELETE FROM user
         WHERE id = #{id}
     </delete>
 
@@ -87,12 +96,16 @@
     <select id="selectPage" resultMap="BaseResultMap" parameterType="map">
         SELECT
         <include refid="Base_Column_List" />
-        FROM ${tableName}
+        FROM user
         <if test="username != null">
             WHERE username = #{username}
         </if>
         ORDER BY id
         LIMIT #{pageNum}, #{pageSize}
+    </select>
+    <select id="getUserVoById" resultType="com.pn.entity.vo.userVo">
+        SELECT * FROM user
+        WHERE id = #{id}
     </select>
 
 </mapper>

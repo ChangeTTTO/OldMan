@@ -2,6 +2,7 @@ package com.pn.mapper;
 
 import com.pn.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.pn.entity.vo.userVo;
 
 /**
  * <p>
@@ -12,5 +13,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2024-06-12 07:28
  */
 public interface UserMapper extends BaseMapper<User> {
-    User selectById(Long id);
+
+    User getUserById(Integer id);
+
+    void register(String email, String password);
+
+    userVo getUserVoById(Integer id);
+    User getUserByEmail(String email);
 }

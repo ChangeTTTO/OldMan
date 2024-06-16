@@ -1,4 +1,4 @@
-package com.pn.dto;
+package com.pn.entity.dto;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,6 +9,9 @@ import org.springframework.web.multipart.MultipartFile;
 @Data
 @ApiModel(value = "CommentDto", description = "")
 public class CommentDTO {
+    @ApiModelProperty("用户id")
+    private Integer uid;
+
     @ApiModelProperty("文章id")
     private Integer articleId;
 

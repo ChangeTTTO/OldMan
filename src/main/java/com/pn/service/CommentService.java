@@ -1,7 +1,7 @@
 package com.pn.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.pn.dto.CommentDTO;
+import com.pn.entity.dto.CommentDTO;
 import com.pn.entity.Comment;
 import com.pn.util.PageInfo;
 
@@ -21,7 +21,7 @@ public interface CommentService extends IService<Comment> {
      * @param commentDTO
      * @return
      */
-    Comment _save(CommentDTO commentDTO);
+    Comment _save(CommentDTO commentDTO,String city);
     /**
      * 根据文章id查询分页评论列表(评论对象里包含回复(reply)的数据)
      * @param pageNum

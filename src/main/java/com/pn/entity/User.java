@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 /**
  * <p>
@@ -17,6 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @author pn
  * @since 2024-06-12 07:28
  */
+@Data
 @ApiModel(value = "User对象", description = "")
 public class User implements Serializable {
 
@@ -28,7 +30,8 @@ public class User implements Serializable {
 
     @ApiModelProperty("用户名")
     private String username;
-
+    @ApiModelProperty("用户名")
+    private String password;
     @ApiModelProperty("年龄")
     private Integer age;
 
@@ -55,99 +58,4 @@ public class User implements Serializable {
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public Integer getAge() {
-        return age;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
-    public Integer getLevel() {
-        return level;
-    }
-
-    public void setLevel(Integer level) {
-        this.level = level;
-    }
-
-    public String getHomeLink() {
-        return homeLink;
-    }
-
-    public void setHomeLink(String homeLink) {
-        this.homeLink = homeLink;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public LocalDateTime getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(LocalDateTime updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-        "id = " + id +
-        ", username = " + username +
-        ", age = " + age +
-        ", email = " + email +
-        ", phone = " + phone +
-        ", avatar = " + avatar +
-        ", level = " + level +
-        ", homeLink = " + homeLink +
-        ", createTime = " + createTime +
-        ", updateTime = " + updateTime +
-        "}";
-    }
 }

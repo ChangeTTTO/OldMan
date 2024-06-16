@@ -4,11 +4,11 @@ import cn.undraw.util.ConvertUtils;
 import cn.undraw.util.FileUtils;
 import cn.undraw.util.StrUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.pn.dto.CommentDTO;
+import com.pn.entity.dto.CommentDTO;
 import com.pn.entity.Comment;
 import com.pn.entity.User;
 import com.pn.mapper.CommentMapper;
-import com.pn.service.CommentLikeService;
+import com.pn.mapper.UserMapper;
 import com.pn.service.CommentService;
 import com.pn.service.UserService;
 import com.pn.util.CommentKeyUtil;
@@ -17,6 +17,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,27 +30,28 @@ import java.util.List;
  */
 @Service
 public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> implements CommentService {
-    @Autowired
+    @Resource
     private CommentMapper commentMapper;
 
-
-    @Autowired
-    private UserService userService;
+    @Resource
+    private UserMapper userMapper;
 
     @Override
-    public Comment _save(CommentDTO commentDTO) {
+    public Comment _save(CommentDTO commentDTO,String city) {
+        //获取当前登录用户
+        Integer id = commentDTO.getUid();
+        User user = userMapper.getUserById(id);
         String comment_img = null;
         if (StrUtils.isNotEmpty(commentDTO.getFiles())) {
             comment_img = FileUtils.upload(commentDTO.getFiles(), "comment_img");
         }
-        Comment comment = new Comment(null, null, 1, 1, "来自上海", null, 0, null, null, null, null);
+        Comment comment = new Comment(null, commentDTO.getParentId(), commentDTO.getArticleId(),
+                id, city, commentDTO.getContent(), 0, null, null, user, null);
         comment.setContentImg(comment_img);
         ConvertUtils.copy(commentDTO, comment);
         if (commentMapper.insert(comment) < 1) {
             throw new RuntimeException();
         }
-        User user = userService.getById(comment.getUid());
-        comment.setUser(user);
         return comment;
     }
 

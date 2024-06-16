@@ -3,7 +3,7 @@ package com.pn.service.impl;
 import cn.undraw.util.ConvertUtils;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.pn.dto.LikedDTO;
+import com.pn.entity.dto.LikedDTO;
 import com.pn.entity.Comment;
 import com.pn.entity.CommentLike;
 import com.pn.mapper.CommentLikeMapper;
@@ -88,11 +88,14 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
         // 查询用户是否点赞
         boolean state = this.isLiked(likedDTO);
         if (state) {
+            //如果已点赞，移除点赞信息，移除后state2为true
             boolean state2 = commentKeyUtil.remLike(likedDTO, true);
+            //如果移除失败，手动更新点赞状态
             if (!state2) {
                 commentKeyUtil.setLike(likedDTO, false);
             }
         } else {
+            //如果用户没有点赞，则进行点赞
             commentKeyUtil.setLike(likedDTO, true);
         }
         return true;
@@ -100,7 +103,7 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
 
     @Override
     public boolean isLiked(LikedDTO likedDTO) {
-        // 查询redis中是否点赞
+        // 查询redis中是否点赞，查看是否有值
         boolean state = commentKeyUtil.isLike(likedDTO, true);
         if (state) {
             return true;
