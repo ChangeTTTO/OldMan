@@ -1,7 +1,4 @@
 package com.pn.controller;
-
-
-import cn.undraw.util.result.R;
 import com.pn.entity.IpLocationResponse;
 import com.pn.entity.dto.CommentDTO;
 import com.pn.entity.dto.LikedDTO;
@@ -10,10 +7,10 @@ import com.pn.service.CommentLikeService;
 import com.pn.service.CommentService;
 import com.pn.util.IpUtils;
 import com.pn.util.PageInfo;
+import cn.undraw.util.result.R;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -65,14 +62,13 @@ public class CommentController {
 
     @ApiOperation("删除评论")
     @DeleteMapping("/remove/{id}")
-    public R remove(@PathVariable Integer id) {
+    public R<?> remove(@PathVariable Integer id) {
         return R.ok(commentService.removeById(id));
     }
 
     @ApiOperation("评论点赞")
     @PostMapping("/liked")
     public R<?> liked(@RequestBody LikedDTO likedDTO) {
-        likedDTO.setUid(1);
         commentLikeService.liked(likedDTO);
         return R.ok();
     }

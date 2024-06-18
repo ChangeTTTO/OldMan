@@ -39,6 +39,7 @@ public class CommentLike implements Serializable {
 
     @ApiModelProperty("创建时间")
     @TableField(fill = FieldFill.INSERT)
+
     private LocalDateTime createTime;
 
     @ApiModelProperty("修改时间")

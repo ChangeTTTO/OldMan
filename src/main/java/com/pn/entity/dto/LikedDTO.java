@@ -13,6 +13,5 @@ public class LikedDTO {
     private Integer commentId;
 
     @ApiModelProperty("用户id")
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     private Integer uid;
 }

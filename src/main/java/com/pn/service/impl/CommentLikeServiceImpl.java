@@ -7,6 +7,7 @@ import com.pn.entity.dto.LikedDTO;
 import com.pn.entity.Comment;
 import com.pn.entity.CommentLike;
 import com.pn.mapper.CommentLikeMapper;
+import com.pn.mapper.CommonMapper;
 import com.pn.service.CommentLikeService;
 import com.pn.service.CommentService;
 import com.pn.util.CommentKeyUtil;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -41,6 +43,9 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
 
     @Autowired
     private CommentKeyUtil commentKeyUtil;
+
+    @Resource
+    private CommonMapper commonMapper;
 
     @Override
     public boolean removeBatchByCid(List<Integer> cList) {
@@ -84,11 +89,36 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
     }
 
     @Override
+    @Transactional
     public boolean liked(LikedDTO likedDTO) {
-        // 查询用户是否点赞
+        //1.根据UID和评论ID生成Key
+       String key = "COMMENT_LIKE:"+likedDTO.getCommentId();
+        //2.查看redis中是否已经点过赞
+        boolean state = redisUtil.sHasKey(key, likedDTO.getUid());
+        //3redis中没有，查数据库
+        CommentLike commentLike = commentLikeMapper.selectCommentLike(likedDTO);
+        //如果已经点过赞
+        if (state && commentLike != null){
+            //从数据库中移除对应的点赞信息
+            commentLikeMapper.removeCommentLike(likedDTO);
+            //从redis中移除对应的点赞信息
+            redisUtil.sRemove(key, likedDTO.getUid());
+            //从数据库移除点赞数
+            commonMapper.decrementCount("comment", String.valueOf(likedDTO.getCommentId()),"likes");
+
+        }else{
+            //如果没有点过赞，那么进行点赞,数据存入MySQL
+            commentLikeMapper.setCommentLike(likedDTO);
+            //从数据库增加点赞数
+            commonMapper.incrementCount("comment", String.valueOf(likedDTO.getCommentId()),"likes");
+            //数据存入Redis
+            redisUtil.sSet(key, likedDTO.getUid());
+        }
+
+      /*  // 查询用户是否点赞
         boolean state = this.isLiked(likedDTO);
         if (state) {
-            //如果已点赞，移除点赞信息，移除后state2为true
+            //如果已点赞，移除点赞信息，正常情况是返回true
             boolean state2 = commentKeyUtil.remLike(likedDTO, true);
             //如果移除失败，手动更新点赞状态
             if (!state2) {
@@ -98,6 +128,7 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
             //如果用户没有点赞，则进行点赞
             commentKeyUtil.setLike(likedDTO, true);
         }
+       */
         return true;
     }
 
@@ -132,7 +163,7 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
      * 点赞同步
      */
     private void like() {
-        // 获取所有评论点赞和取消点赞key值列表
+        // 获取所有评论点赞key值列表
         List<String> keyList = commentKeyUtil.getLikeList(true);
         // 评论点赞用户id列表
         List<CommentLike> commentLikes = new ArrayList<>();
@@ -189,7 +220,6 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
             comment.setId(articleId);
             comment.setLikes(-(int)count);
             cCancelList.add(comment);
-
             cCancelLikes.add(articleId);
         }
 

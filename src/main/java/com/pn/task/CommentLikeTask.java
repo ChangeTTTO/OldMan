@@ -15,9 +15,9 @@ public class CommentLikeTask {
     /**
      * 每天 00::00::00执行
      */
-    @Scheduled(cron = "0 0 0 * * *")
+   /* @Scheduled(cron = "0 0 0 * * *")
     public void task2() {
         // 将点赞数持久化到MySQL中，然后再删除所有redis缓存
         commentLikeService.syncLike();
-    }
+    }*/
 }

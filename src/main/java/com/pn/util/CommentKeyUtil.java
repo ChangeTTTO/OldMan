@@ -49,6 +49,7 @@ public class CommentKeyUtil {
      * @return boolean
      */
     public boolean isLike(LikedDTO likedDTO, boolean state) {
+        //值为
         return redisUtil.sHasKey(getLikeKey(likedDTO.getCommentId(), state), likedDTO.getUid());
     }
 
@@ -82,12 +83,12 @@ public class CommentKeyUtil {
 
 
    /**
-    * 根据评论id和状态获取对应的key
+    * 根据评论id和状态获取对应的key：①点赞+被点赞的评论id，②取消点赞+被点赞的评论id
     * @param commentId
     * @param state
     * @return java.lang.String
     */
-    private String getLikeKey(Integer commentId, boolean state) {
+    public String getLikeKey(Integer commentId, boolean state) {
         return state ? COMMENT_LIKE + commentId : COMMENT_CANCEL_LIKE + commentId;
     }
 

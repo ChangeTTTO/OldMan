@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.pn.mapper.CommentLikeMapper">
+    <insert id="setCommentLike">
+        insert into comment_like (uid, comment_id) value (#{uid},#{commentId})
+    </insert>
     <delete id="deleteBatchByCid" >
         -- choose标签是按顺序判断其内部when标签中的test条件出否成立，如果有一个成立，则 choose 结束。
         -- 当 choose 中所有 when 的条件都不满则时，则执行 otherwise 中的sql。
@@ -17,4 +20,16 @@
             </otherwise>
         </choose>
     </delete>
+    <delete id="removeCommentLike">
+        delete
+        from comment_like
+        where comment_id = #{commentId}
+        and uid = #{uid}
+    </delete>
+    <select id="selectCommentLike" resultType="com.pn.entity.CommentLike">
+        select *
+        from oldman.comment_like
+        where comment_id = #{commentId}
+        and uid = #{uid}
+    </select>
 </mapper>
