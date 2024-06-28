@@ -47,6 +47,7 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
     @Resource
     private CommonMapper commonMapper;
 
+    CommentLike commentLike;
     @Override
     public boolean removeBatchByCid(List<Integer> cList) {
         return commentLikeMapper.deleteBatchByCid(cList) > 0;
@@ -95,10 +96,12 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
        String key = "COMMENT_LIKE:"+likedDTO.getCommentId();
         //2.查看redis中是否已经点过赞
         boolean state = redisUtil.sHasKey(key, likedDTO.getUid());
-        //3redis中没有，查数据库
-        CommentLike commentLike = commentLikeMapper.selectCommentLike(likedDTO);
+        //3.redis中没有，查数据库
+        if(!state){
+            commentLike = commentLikeMapper.selectCommentLike(likedDTO);
+        }
         //如果已经点过赞
-        if (state && commentLike != null){
+        if (state || commentLike != null){
             //从数据库中移除对应的点赞信息
             commentLikeMapper.removeCommentLike(likedDTO);
             //从redis中移除对应的点赞信息
@@ -114,22 +117,7 @@ public class CommentLikeServiceImpl extends ServiceImpl<CommentLikeMapper, Comme
             //数据存入Redis
             redisUtil.sSet(key, likedDTO.getUid());
         }
-
-      /*  // 查询用户是否点赞
-        boolean state = this.isLiked(likedDTO);
-        if (state) {
-            //如果已点赞，移除点赞信息，正常情况是返回true
-            boolean state2 = commentKeyUtil.remLike(likedDTO, true);
-            //如果移除失败，手动更新点赞状态
-            if (!state2) {
-                commentKeyUtil.setLike(likedDTO, false);
-            }
-        } else {
-            //如果用户没有点赞，则进行点赞
-            commentKeyUtil.setLike(likedDTO, true);
-        }
-       */
-        return true;
+            return true;
     }
 
     @Override

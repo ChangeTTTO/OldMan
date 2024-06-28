@@ -12,7 +12,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @SpringBootApplication
 @MapperScan("com.pn.mapper") // mybatis扫描mapper文件
-@EnableScheduling // 开启定时任务
 @EnableCool //开启cool-core工具
 public class oldManApplication {
     public static void main(String[] args) {

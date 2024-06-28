@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 
+/**
+ * 插入更新自动填充
+ */
 @Component
 public class MyMetaObjectHandler implements MetaObjectHandler {
     @Override

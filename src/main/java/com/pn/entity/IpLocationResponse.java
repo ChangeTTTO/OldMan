@@ -3,6 +3,9 @@ package com.pn.entity;
 import lombok.Data;
 import lombok.Getter;
 
+/**
+ * 高德API对应实体类
+ */
 @Data
 public class IpLocationResponse {
     private String status;

@@ -51,11 +51,9 @@ public class CommentController {
     public R<?> save(HttpServletRequest request, @RequestBody CommentDTO commentDTO) {
         // 获取客户端IP地址
         String ip = IpUtils.getClientIpAddress(request);
-        System.out.println("IP地址是:"+ip);
         // 获取城市信息
         IpLocationResponse bean = IpUtils.getCity(ip);
         String province = bean.getProvince();
-        System.out.println("城市是:"+province);
         // 保存评论
         return R.ok(commentService._save(commentDTO,province));
     }

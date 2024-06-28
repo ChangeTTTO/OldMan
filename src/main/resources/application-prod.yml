@@ -53,7 +53,3 @@ mybatis-plus:
   # 实体类别名,无需添加完整包路径
   type-aliases-package: com.pn.entity
 
-logging:
-  config: classpath:log4j2-prod.xml
-  file:
-    path: logs/oldman

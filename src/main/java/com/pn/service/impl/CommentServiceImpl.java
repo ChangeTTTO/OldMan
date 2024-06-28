@@ -64,8 +64,8 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         for (int i = 0; i < parentList.size(); i++) {
             Comment comment = parentList.get(i);
             Integer id = comment.getId();
-            // 合并redis中的点赞数量
-            comment.setLikes(comment.getLikes() + getLikeCount(id));
+            /*// 合并redis中的点赞数量
+            comment.setLikes(comment.getLikes() + getLikeCount(id));*/
             // 分页查询回复
             PageInfo<Comment> replyPage = replyPage(1, 5, id);
             Comment.Reply reply = new Comment.Reply();
